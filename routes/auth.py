@@ -1,23 +1,13 @@
-try:
-    import sys
-    #https://stackoverflow.com/a/59598549
-    sys.path.insert(1, '../models')
-    sys.path.insert(1, '..\\models')
-    from conn import db
-    from model import User
-except (ModuleNotFoundError, ImportError) as e:
-    print("{} file import error".format(type(e)))
-    print( f'{e}')
-else:
-    print("models import succeeded")
-
 from flask import Blueprint
 from flask import render_template
 from flask import request
 from flask import redirect
 from flask import url_for
 from flask import flash
+from flask import current_app
 
+from models.conn import db
+from models.model import *
 
 auth = Blueprint('auth', __name__)
 
