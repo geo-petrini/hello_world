@@ -12,6 +12,11 @@ from flask_migrate import Migrate
 
 from flask_login import LoginManager
 
+#flask-admin
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+
+
 from routes.api import api as bp_api
 from routes.auth import auth as bp_auth
 
@@ -45,6 +50,13 @@ def load_user(user_id):
     user = db.session.execute(stmt).scalar_one_or_none()
     # return User.query.get(int(user_id))
     return user
+
+
+#flask-admin
+admin = Admin(app, name='admin')
+admin.add_view(ModelView(User, db.session))
+# admin.add_view(ModelView(Post, db.session))
+
 
 @app.route('/')
 def home():
