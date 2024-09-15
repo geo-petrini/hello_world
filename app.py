@@ -10,6 +10,8 @@ from models.model import *
 
 from flask_migrate import Migrate
 
+from flask_login import LoginManager
+
 from routes.api import api as bp_api
 from routes.auth import auth as bp_auth
 
@@ -28,9 +30,21 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 #L'opzione SQLALCHEMY_TRACK_MODIFICATIONS è una configurazione per Flask-SQLAlchemy che determina se SQLAlchemy deve o meno tenere traccia delle modifiche sugli oggetti per ogni sessione.
 db.init_app(app)
-
-
 migrate = Migrate(app, db)
+
+
+# flask_login user loader block
+login_manager = LoginManager()
+login_manager.login_view = 'auth.login'
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    # since the user_id is just the primary key of our user table, use it in the query for the user
+    stmt = db.select(User).filter_by(id=user_id)
+    user = db.session.execute(stmt).scalar_one_or_none()
+    # return User.query.get(int(user_id))
+    return user
 
 @app.route('/')
 def home():

@@ -6,10 +6,14 @@ from flask import url_for
 from flask import flash
 from flask import current_app
 
+from flask_login import login_user, logout_user, login_required, current_user
+
 from models.conn import db
 from models.model import *
 
 auth = Blueprint('auth', __name__)
+
+
 
 
 @auth.route('/login')
@@ -32,6 +36,7 @@ def login_post():
         return redirect(url_for('auth.login')) # if the user doesn't exist or password is wrong, reload the page
 
     # if the above check passes, then we know the user has the right credentials
+    login_user(user, remember=remember)
     return redirect(url_for('auth.profile'))    
 
 @auth.route('/signup', methods=['GET'])
@@ -71,5 +76,13 @@ def signup_post():
     return redirect(url_for('auth.login'))
 
 @auth.route('/logout')
+@login_required
 def logout():
+    logout_user()
     return 'Logout'
+
+
+@auth.route('/profile')
+@login_required
+def profile():
+    return render_template('auth/profile.html', name=current_user.username)
