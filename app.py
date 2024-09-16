@@ -11,6 +11,7 @@ from models.model import *
 from flask_migrate import Migrate
 
 from flask_login import LoginManager
+from flask_login import login_required
 
 #flask-admin
 from flask_admin import Admin
@@ -37,6 +38,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 migrate = Migrate(app, db)
 
+with app.app_context():
+    init_db()
 
 # flask_login user loader block
 login_manager = LoginManager()
@@ -76,6 +79,15 @@ def sum():
     v1 = values["v1"]
     v2 = values["v2"]
     return f'{v1+v2}'
+
+
+@app.route('/dashboard')
+@login_required
+@user_has_role('admin') # oppure @user_has_role('admin', 'moderator')
+def admin_dashboard():
+    return 'dashboard'
+    # return render_template('admin_dashboard.html')
+
 
 
 # OLD user functions

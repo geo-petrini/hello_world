@@ -13,9 +13,6 @@ from models.model import *
 
 auth = Blueprint('auth', __name__)
 
-
-
-
 @auth.route('/login')
 def login():
     # return 'Login'
@@ -27,11 +24,15 @@ def login_post():
     password = request.form.get('password')
     remember = True if request.form.get('remember') else False
 
-    user = User.query.filter_by(email=email).first()
+    # user = User.query.filter_by(email=email).first()
+    stmt = db.select(User).filter_by(email=email)
+    user = db.session.execute(stmt).scalar_one_or_none()    
 
+    current_app.logger.info(f'user: {user}')
     # check if the user actually exists
     # take the user-supplied password, hash it, and compare it to the hashed password in the database
     if not user or not user.check_password(password):
+        current_app.logger.error(f'user {email} not logged with password: {password}')
         flash('Please check your login details and try again.')
         return redirect(url_for('auth.login')) # if the user doesn't exist or password is wrong, reload the page
 
@@ -48,9 +49,12 @@ def signup():
 def signup_post():
     # signup input validation and logic
     #TODO verify password strenght
-    username = request.form["username"] #as an alternative use request.form.get("username")
-    email = request.form["email"]    
-    password = request.form["password"]
+    # username = request.form["username"] #as an alternative use request.form.get("username")
+    # email = request.form["email"]    
+    # password = request.form["password"]
+    username = request.form.get('username')
+    email = request.form.get('email')
+    password = request.form.get('password')    
 
     if not username:
         flash('Invalid username')
