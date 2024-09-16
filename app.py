@@ -38,8 +38,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 migrate = Migrate(app, db)
 
-with app.app_context():
-    init_db()
+
 
 # flask_login user loader block
 login_manager = LoginManager()
@@ -62,4 +61,6 @@ def home():
 
 
 if __name__ == '__main__':
+    with app.app_context():
+        init_db()
     app.run(debug=True)
