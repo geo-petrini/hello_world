@@ -1,0 +1,35 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+<div class="content">
+    <h2>Config</h2>
+    <div>
+        <table>
+            <thead>
+                <th>Key</th>
+                <th>Value</th>
+            </thead>
+            <tbody>            
+            {% if config != None: %}
+                {% for key, value in config.items(): %}
+                <tr><th>{{key}}</th><td>{{value}}</td></tr>
+                {% endfor %}
+            {% endif %}
+            </tbody>
+        </table>  
+    </div>
+    <h2>Routes</h2>
+    <table>
+        <thead>
+            <th>Route</th>
+            <th>Methods</th>
+            <th>Defaults</th>
+        </thead>
+        <tbody>
+        {% for rule in map.iter_rules(): %}
+            <tr><th>{{rule}}</th><td>{{rule.methods}}</td><td>{{rule.defaults}}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
