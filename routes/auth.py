@@ -83,7 +83,7 @@ def signup_post():
 @login_required
 def logout():
     logout_user()
-    return 'Logout'
+    return redirect(url_for('home'))
 
 
 @auth.route('/profile')
