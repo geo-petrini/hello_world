@@ -1,0 +1,51 @@
+@hostname = localhost
+@port = 5000
+@host = {{hostname}}:{{port}}
+
+### Test form POST
+POST http://{{host}}/form HTTP/1.1
+
+### Test form GET
+
+GET http://{{host}}/form HTTP/1.1
+
+### API test
+GET http://{{host}}/api/data HTTP/1.1
+
+### API get with param
+GET http://{{host}}/api/data?param=1 HTTP/1.1
+
+### API POST 
+POST http://{{host}}/api/data HTTP/1.1
+content-type: application/json
+
+{
+    "data":"test"
+}
+
+### API POST no content-type
+POST http://{{host}}/api/data HTTP/1.1
+
+{
+    "data":"test"
+}
+
+# response expected: 415 UNSUPPORTED MEDIA TYPE
+
+### API POST no json
+POST http://{{host}}/api/data HTTP/1.1
+content-type: application/json
+
+# expected 400 BAD REQUEST
+
+
+### API PUT
+PUT http://{{host}}/api/data/1 HTTP/1.1
+content-type: application/json
+
+{
+    "updated_data":"test 2"
+}
+
+### API DELETE
+DELETE http://{{host}}/api/data/1 HTTP/1.1
